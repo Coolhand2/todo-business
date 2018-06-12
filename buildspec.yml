@@ -10,6 +10,8 @@ phases:
             - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
             - apt-get update -y
             - apt-get install -y docker-ce
+            - systemctl enable docker
+              systemctl start docker
             - echo Logging in to Amazon ECR...
             - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
     build:
