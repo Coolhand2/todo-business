@@ -1,0 +1,23 @@
+{
+  "name": "todo-business",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm install && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Coolhand2/todo-business.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Coolhand2/todo-business/issues"
+  },
+  "homepage": "https://github.com/Coolhand2/todo-business#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
