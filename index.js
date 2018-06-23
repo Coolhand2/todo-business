@@ -18,7 +18,7 @@ const params = {
 //var credentials = {key: privateKey, cert: certificate};
 const credentials = {};
 
-const app = express.createServer(credentials);
+const app = express(credentials);
 
 app.get('/', function(req, res) {
     db.listTables({Limit: 10}, function(err, data){
