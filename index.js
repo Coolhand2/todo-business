@@ -8,17 +8,27 @@ const credentials = {};
 
 const app = express(credentials);
 
-app.get('/', function(req, res) {
+const cb = (err, data) => {
+    if(err) {
+        return err;
+    }
+    return data;
+}
+
+app.get('/', (req, res) => {
+    db.listTables({},(err, data) => {
+        if(err) { res.send(err); }
+        else{ res.send(data); }
+    });
+});
+app.get('/item/:id', (req, res) => {
     const params = {
         TableName: 'todo_demo',
-        Key: {'id': {N: '0'}}
+        Key: {'id': {N: params["id"]}}
     };
-    db.getItem(params, function(err, data){
-        if(err) {
-            res.send(err);
-        } else {
-            res.send(data);
-        }
+    db.getItem(params,(err, data) => {
+        if(err) { res.send(err); }
+        else{ res.send(data); }
     });
 });
 
