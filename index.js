@@ -1,8 +1,17 @@
 const express = require('express')
-const app = express()
+const fs = require('fs');
+
+var privateKey = fs.readFileSync('/opt/data/server.key');
+var certificate = fs.readFileSync('/opt/data/server.crt');
+
+var credentials = {key: privateKey, cert: certificate};
+
+
+const app = express.createServer(credentials);
 
 app.get('/', function(req, res) {
-    res.send('Hello, World!?');
+
+    res.send('Hello, World!?!');
 });
 
-app.listen(3000);
+app.listen(443);
