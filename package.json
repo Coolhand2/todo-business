@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Coolhand2/todo-business#readme",
   "dependencies": {
+    "aws-sdk": "^2.263.1",
     "express": "^4.16.3"
   }
 }

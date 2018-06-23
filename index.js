@@ -1,11 +1,11 @@
 const express = require('express')
 const fs = require('fs');
 
-var privateKey = fs.readFileSync('/opt/data/server.key');
-var certificate = fs.readFileSync('/opt/data/server.crt');
+//var privateKey = fs.readFileSync('/opt/data/server.key');
+//var certificate = fs.readFileSync('/opt/data/server.crt');
 
-var credentials = {key: privateKey, cert: certificate};
-
+//var credentials = {key: privateKey, cert: certificate};
+const credentials = {};
 
 const app = express.createServer(credentials);
 
