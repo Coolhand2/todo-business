@@ -16,15 +16,19 @@ const cb = (err, data) => {
 }
 
 app.get('/', (req, res) => {
+    console.log("Retrieving all tables as listing");
     db.listTables({},(err, data) => {
         if(err) { res.send(err); }
         else{ res.send(data); }
     });
 });
 app.get('/item/:id', (req, res) => {
+    console.log("Fetching by id");
+    console.log("DEBUG: parameters: " + req.params);
+    console.log("DEBUG: id?: " + req.params.id);
     const params = {
         TableName: 'todo_demo',
-        Key: {'id': {N: params["id"]}}
+        Key: {'id': {N: req.params.id}}
     };
     db.getItem(params,(err, data) => {
         if(err) { res.send(err); }
