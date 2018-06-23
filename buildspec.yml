@@ -16,3 +16,4 @@ phases:
             - echo Build completed on `date`
             - echo Pushing the Docker image
             - docker push 314749681433.dkr.ecr.us-west-2.amazonaws.com/todo-business:latest
+            - aws ecs update-service --service "arn:aws:ecs:us-west-2:314749681433:service/todo-api" --cluster "arn:aws:ecs:us-west-2:314749681433:cluster/todo-api" --force-new-deployment
