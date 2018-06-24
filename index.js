@@ -36,7 +36,7 @@ app.get('/user/:id', (req, res) => {
 app.get('/item/all', (req, res) => {
     const params = {
         TableName: TODO_TABLE,
-        ProjectionExpression: "Id, Done, Todo"
+        ProjectionExpression: "Id, Created, Done, Item, User"
     };
     db.scan(params, (err, data) => {
         if(err){ res.send({success: false, error: err}); }
