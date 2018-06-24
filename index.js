@@ -9,7 +9,8 @@ const NAMESPACE = uuid('todo-api.shiftedhelix.com', uuid.URL);
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-west-2'});
 
-const db = new AWS.DynamoDB.DocumentClient();
+const db = new AWS.DynamoDB();
+const doc = new AWS.DynamoDB.DocumentClient();
 const TODO_TABLE = 'todo';
 const USER_TABLE = 'user';
 
@@ -20,7 +21,7 @@ app.get('/user/all', (req, res) => {
     params.ProjectionExpression = "Id, Handle, Email, Password";
 
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    db.scan(params, (err, data) => {
+    doc.scan(params, (err, data) => {
         let body = {};
         if(err){ body.success = false; body.error = err; }
         else{ body.success = true; body.data = data; }
@@ -35,7 +36,7 @@ app.get('/user/:id', (req, res) => {
     params.Key = {'Id': req.params.id}
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    db.get(params, (err, data) => {
+    db.getItem(params, (err, data) => {
         let body = {};
         if(err){ body.success = false; body.error = err; }
         else{ body.success = true; body.data = data; }
@@ -54,7 +55,7 @@ app.get('/item/all', (req, res) => {
     };
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    db.scan(params, (err, data) => {
+    doc.scan(params, (err, data) => {
         let body = {};
         if(err){ body.success = false; body.error = err; }
         else{ body.success = true; body.data = data; }
@@ -69,7 +70,7 @@ app.get('/item/:id', (req, res) => {
     params.Key = {Id: req.params.id};
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    db.get(params, (err, data) => {
+    db.getItem(params, (err, data) => {
         let body = {};
         if(err){ body.success = false; body.error = err; }
         else{ body.success = true; body.data = data; }
