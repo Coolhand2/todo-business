@@ -26,7 +26,7 @@ app.get('/user/all', (req, res) => {
 app.get('/user/:id', (req, res) => {
     const params = {
         TableName: USER_TABLE,
-        Key: {'Id': {S: req.params.id}}
+        Key: {'Id': req.params.id}
     };
     db.get(params, (err, data) => {
         if(err){ res.send({success: false, error: err}); }
@@ -47,7 +47,7 @@ app.get('/item/:id', (req, res) => {
     console.log("Fetching by id [" + req.params.id + "]");
     const params = {
         TableName: TODO_TABLE,
-        Key: {'Id': {S: req.params.id}}
+        Key: {'Id': req.params.id}
     };
     db.get(params,(err, data) => {
         if(err) { res.send({success: false, error: err}); }
