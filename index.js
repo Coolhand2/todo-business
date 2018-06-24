@@ -9,10 +9,17 @@ const NAMESPACE = uuid('todo-api.shiftedhelix.com', uuid.URL);
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-west-2'});
 
-const db = new AWS.DynamoDB();
-const doc = new AWS.DynamoDB.DocumentClient();
+const db = new AWS.DynamoDB.DocumentClient();
 const TODO_TABLE = 'todo';
 const USER_TABLE = 'user';
+
+let callback = (res, err, data) => {    
+    let body = {};
+    if(err){ body.success = false; body.error = err; }
+    else{ body.success = true; body.data = data; }
+    res.send(body);
+    console.log("Return: " + JSON.stringify(body));
+};
 
 app.get('/user/all', (req, res) => {
     console.log("Fetching All User");
@@ -21,28 +28,16 @@ app.get('/user/all', (req, res) => {
     params.ProjectionExpression = "Id, Handle, Email, Password";
 
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    doc.scan(params, (err, data) => {
-        let body = {};
-        if(err){ body.success = false; body.error = err; }
-        else{ body.success = true; body.data = data; }
-        res.send(body);
-        console.log("Return: " + JSON.stringify(body));
-    });
+    db.scan(params, (err, data) => { callback(res, err, data); });
 });
 app.get('/user/:id', (req, res) => {
     console.log("Fetching User by Id [" + req.params.id + "]");
     let params = {};
     params.TableName = USER_TABLE;
-    params.Key = {'Id': {S: req.params.id}};
+    params.Key = {'Id': req.params.id};
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    db.getItem(params, (err, data) => {
-        let body = {};
-        if(err){ body.success = false; body.error = err; }
-        else{ body.success = true; body.data = data; }
-        res.send(body);
-        console.log("Return: " + JSON.stringify(body));
-    });
+    db.get(params, (err, data) => { callback(res, err, data); });
 });
 app.get('/item/all', (req, res) => {
     console.log("Fetching All Items");
@@ -55,28 +50,16 @@ app.get('/item/all', (req, res) => {
     };
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    doc.scan(params, (err, data) => {
-        let body = {};
-        if(err){ body.success = false; body.error = err; }
-        else{ body.success = true; body.data = data; }
-        res.send(body);
-        console.log("Return: " + JSON.stringify(body));
-    });
+    db.scan(params, (err, data) => { callback(res, err, data); });
 });
 app.get('/item/:id', (req, res) => {
     console.log("Fetching by id [" + req.params.id + "]");
     let params = {};
     params.TableName = TODO_TABLE;
-    params.Key = {'Id': {S: req.params.id}};
+    params.Key = {'Id': req.params.id};
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    db.getItem(params, (err, data) => {
-        let body = {};
-        if(err){ body.success = false; body.error = err; }
-        else{ body.success = true; body.data = data; }
-        res.send(body);
-        console.log("Return: " + JSON.stringify(body));
-    });
+    db.get(params, (err, data) => { callback(res, err, data); });
 });
 
 app.listen(3000);
