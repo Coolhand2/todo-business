@@ -47,7 +47,11 @@ app.get('/item/all', (req, res) => {
     console.log("Fetching All Items");
     let params = {};
     params.TableName = TODO_TABLE;
-    params.ProjectionExpression = "Id, Created, Done, #Item, #User";
+    params.ProjectionExpression = "Id, Created, Done, #i, #u";
+    params.ExpressionAttributeNames = {
+        "#i": "Item",
+        "#u": "User"
+    };
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
     db.scan(params, (err, data) => {
