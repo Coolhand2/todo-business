@@ -10,9 +10,30 @@ const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-west-2'});
 
 const db = new AWS.DynamoDB.DocumentClient();
-const TODO_TABLE = 'todo_demo';
+const TODO_TABLE = 'todo';
+const USER_TABLE = 'user';
 
-app.get('/item', (req, res) => {
+app.get('/user/all', (req, res) => {
+    const params = {
+        TableName: USER_TABLE,
+        ProjectionExpression: "id, handle, email, password"
+    };
+    db.scan(params, (err, data) => {
+        if(err){ res.send({success: false, error: err}); }
+        else{ res.send({success: true, data: data}); }
+    });
+});
+app.get('/user/:id', (req, res) => {
+    const params = {
+        TableName: USER_TABLE,
+        Key: {'id': {S: req.params.id}}
+    };
+    db.get(params, (err, data) => {
+        if(err){ res.send({success: false, error: err}); }
+        else{ res.send({success: true, data: data}); }
+    });
+});
+app.get('/item/all', (req, res) => {
     const params = {
         TableName: TODO_TABLE,
         ProjectionExpression: "id, done, todo"
@@ -33,51 +54,5 @@ app.get('/item/:id', (req, res) => {
         else{ res.send({success: true, data: data}); }
     });
 });
-app.put('/item', (req, res) => {
-    const newId = uuid(req.body, NAMESPACE);
-    const params = {
-        TableName: TODO_TABLE, 
-        Item: {
-            id: newId,
-            done: {BOOL: req.body.done},
-            todo: {S: req.body.todo}
-        }
-    };
-    db.put(params, (err, data) => {
-        if(err) { res.send({success: false, error: err}); }
-        else{ res.send({success: true, data: newId}); }
-    });
-});
-app.post('/item/:id', (req, res) => {
-    const params = {
-        TableName: TODO_TABLE,
-        Key: {
-            id: {N: req.body.id},
-        },
-        UpdateExpression: 'set done = :d, todo = :t',
-        ExpressionValues: {
-            ':d': req.body.done,
-            ':t': req.body.todo
-        },
-        ReturnValues: "UPDATED_NEW"
-    };
-    db.update(params, (err, data) => {
-        if(err){ res.send({success: false, error: err}); }
-        else{ res.send({success: true}); }
-    });
-});
-app.delete('/item/:id', (req, res) => {
-    const params = {
-        TableName: TODO_TABLE,
-        Key: {
-            "id": req.body.id
-        }
-    };
-    db.delete(params, (err, data) => {
-        if(err){ res.send({success: false, error: err}); }
-        else{ res.send({success: true, data: data}); }
-    });
-});
-
 
 app.listen(3000);
