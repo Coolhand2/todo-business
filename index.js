@@ -33,7 +33,7 @@ app.get('/user/:id', (req, res) => {
     console.log("Fetching User by Id [" + req.params.id + "]");
     let params = {};
     params.TableName = USER_TABLE;
-    params.Key = {'Id': req.params.id}
+    params.Key = {'Id': {S: req.params.id}};
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
     db.getItem(params, (err, data) => {
@@ -67,7 +67,7 @@ app.get('/item/:id', (req, res) => {
     console.log("Fetching by id [" + req.params.id + "]");
     let params = {};
     params.TableName = TODO_TABLE;
-    params.Key = {Id: req.params.id};
+    params.Key = {'Id': {S: req.params.id}};
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
     db.getItem(params, (err, data) => {
