@@ -14,30 +14,35 @@ const TODO_TABLE = 'todo';
 const USER_TABLE = 'user';
 
 app.get('/user/all', (req, res) => {
-    const params = {
-        TableName: USER_TABLE,
-        ProjectionExpression: "Id, Handle, Email, Password"
-    };
+    console.log("Fetching All User");
+    let params = {};
+    params.TableName = USER_TABLE;
+    params.ProjectionExpression = "Id, Handle, Email, Password";
+
+    console.log("Fetch Parameters: " + JSON.stringify(params));
     db.scan(params, (err, data) => {
         if(err){ res.send({success: false, error: err}); }
         else{ res.send({success: true, data: data}); }
     });
 });
 app.get('/user/:id', (req, res) => {
-    const params = {
-        TableName: USER_TABLE,
-        Key: {'Id': req.params.id}
-    };
+    console.log("Fetching User by Id [" + req.params.id + "]");
+    let params = {};
+    params.TableName = USER_TABLE;
+    params.Key = {'Id': req.params.id}
+    
+    console.log("Fetch Parameters: " + JSON.stringify(params));
     db.get(params, (err, data) => {
         if(err){ res.send({success: false, error: err}); }
         else{ res.send({success: true, data: data}); }
     });
 });
 app.get('/item/all', (req, res) => {
-    const params = {
-        TableName: TODO_TABLE,
-        ProjectionExpression: "Id, Created, Done, Item, User"
-    };
+    let params = {};
+    params.TableName = TODO_TABLE;
+    params.ProjectionExpression = "Id, Created, Done, Item, User";
+    
+    console.log("Fetch Parameters: " + JSON.stringify(params));
     db.scan(params, (err, data) => {
         if(err){ res.send({success: false, error: err}); }
         else{ res.send({success: true, data: data}); }
@@ -45,10 +50,11 @@ app.get('/item/all', (req, res) => {
 });
 app.get('/item/:id', (req, res) => {
     console.log("Fetching by id [" + req.params.id + "]");
-    const params = {
-        TableName: TODO_TABLE,
-        Key: {'Id': req.params.id}
-    };
+    let params = {};
+    params.TableName = TODO_TABLE;
+    params.Key = {'Id': req.params.id};
+    
+    console.log("Fetch Parameters: " + JSON.stringify(params));
     db.get(params,(err, data) => {
         if(err) { res.send({success: false, error: err}); }
         else{ res.send({success: true, data: data}); }
