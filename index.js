@@ -20,13 +20,13 @@ app.get('/user/all', (req, res) => {
     params.ProjectionExpression = "Id, Handle, Email, Password";
 
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    let body = {};
     db.scan(params, (err, data) => {
+        let body = {};
         if(err){ body.success = false; body.error = err; }
         else{ body.success = true; body.data = data; }
+        res.send(body);
+        console.log("Return: " + JSON.stringify(body));
     });
-    console.log("Return: " + JSON.stringify(body));
-    res.send(body);
 });
 app.get('/user/:id', (req, res) => {
     console.log("Fetching User by Id [" + req.params.id + "]");
@@ -35,13 +35,13 @@ app.get('/user/:id', (req, res) => {
     params.Key = {'Id': req.params.id}
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    let body = {};
-    db.scan(params, (err, data) => {
+    db.get(params, (err, data) => {
+        let body = {};
         if(err){ body.success = false; body.error = err; }
         else{ body.success = true; body.data = data; }
+        res.send(body);
+        console.log("Return: " + JSON.stringify(body));
     });
-    console.log("Return: " + JSON.stringify(body));
-    res.send(body);
 });
 app.get('/item/all', (req, res) => {
     console.log("Fetching All Items");
@@ -50,13 +50,13 @@ app.get('/item/all', (req, res) => {
     params.ProjectionExpression = "Id, Created, Done, #Item, User";
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    let body = {};
     db.scan(params, (err, data) => {
+        let body = {};
         if(err){ body.success = false; body.error = err; }
         else{ body.success = true; body.data = data; }
+        res.send(body);
+        console.log("Return: " + JSON.stringify(body));
     });
-    console.log("Return: " + JSON.stringify(body));
-    res.send(body);
 });
 app.get('/item/:id', (req, res) => {
     console.log("Fetching by id [" + req.params.id + "]");
@@ -65,13 +65,13 @@ app.get('/item/:id', (req, res) => {
     params.Key = {'Id': req.params.id};
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    let body = {};
-    db.scan(params, (err, data) => {
+    db.get(params, (err, data) => {
+        let body = {};
         if(err){ body.success = false; body.error = err; }
         else{ body.success = true; body.data = data; }
+        res.send(body);
+        console.log("Return: " + JSON.stringify(body));
     });
-    console.log("Return: " + JSON.stringify(body));
-    res.send(body);
 });
 
 app.listen(3000);
