@@ -1,5 +1,5 @@
 const express = require('express')
-const credentials = {};
+const credentials = {}; //For future SSL Configuration.
 const app = express(credentials);
 app.use(express.json());
 
@@ -20,10 +20,13 @@ app.get('/user/all', (req, res) => {
     params.ProjectionExpression = "Id, Handle, Email, Password";
 
     console.log("Fetch Parameters: " + JSON.stringify(params));
+    let body = {};
     db.scan(params, (err, data) => {
-        if(err){ res.send({success: false, error: err}); }
-        else{ res.send({success: true, data: data}); }
+        if(err){ body.success = false; body.error = err; }
+        else{ body.success = true; body.data = data; }
     });
+    console.log("Return: " + JSON.stringify(body));
+    res.send(body);
 });
 app.get('/user/:id', (req, res) => {
     console.log("Fetching User by Id [" + req.params.id + "]");
@@ -32,21 +35,28 @@ app.get('/user/:id', (req, res) => {
     params.Key = {'Id': req.params.id}
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    db.get(params, (err, data) => {
-        if(err){ res.send({success: false, error: err}); }
-        else{ res.send({success: true, data: data}); }
+    let body = {};
+    db.scan(params, (err, data) => {
+        if(err){ body.success = false; body.error = err; }
+        else{ body.success = true; body.data = data; }
     });
+    console.log("Return: " + JSON.stringify(body));
+    res.send(body);
 });
 app.get('/item/all', (req, res) => {
+    console.log("Fetching All Items");
     let params = {};
     params.TableName = TODO_TABLE;
-    params.ProjectionExpression = "Id, Created, Done, Item, User";
+    params.ProjectionExpression = "Id, Created, Done, #Item, User";
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
+    let body = {};
     db.scan(params, (err, data) => {
-        if(err){ res.send({success: false, error: err}); }
-        else{ res.send({success: true, data: data}); }
+        if(err){ body.success = false; body.error = err; }
+        else{ body.success = true; body.data = data; }
     });
+    console.log("Return: " + JSON.stringify(body));
+    res.send(body);
 });
 app.get('/item/:id', (req, res) => {
     console.log("Fetching by id [" + req.params.id + "]");
@@ -55,10 +65,13 @@ app.get('/item/:id', (req, res) => {
     params.Key = {'Id': req.params.id};
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
-    db.get(params,(err, data) => {
-        if(err) { res.send({success: false, error: err}); }
-        else{ res.send({success: true, data: data}); }
+    let body = {};
+    db.scan(params, (err, data) => {
+        if(err){ body.success = false; body.error = err; }
+        else{ body.success = true; body.data = data; }
     });
+    console.log("Return: " + JSON.stringify(body));
+    res.send(body);
 });
 
 app.listen(3000);
