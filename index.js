@@ -16,7 +16,7 @@ const USER_TABLE = 'user';
 app.get('/user/all', (req, res) => {
     const params = {
         TableName: USER_TABLE,
-        ProjectionExpression: "id, handle, email, password"
+        ProjectionExpression: "Id, Handle, Email, Password"
     };
     db.scan(params, (err, data) => {
         if(err){ res.send({success: false, error: err}); }
@@ -26,7 +26,7 @@ app.get('/user/all', (req, res) => {
 app.get('/user/:id', (req, res) => {
     const params = {
         TableName: USER_TABLE,
-        Key: {'id': {S: req.params.id}}
+        Key: {'Id': {S: req.params.id}}
     };
     db.get(params, (err, data) => {
         if(err){ res.send({success: false, error: err}); }
@@ -36,7 +36,7 @@ app.get('/user/:id', (req, res) => {
 app.get('/item/all', (req, res) => {
     const params = {
         TableName: TODO_TABLE,
-        ProjectionExpression: "id, done, todo"
+        ProjectionExpression: "Id, Done, Todo"
     };
     db.scan(params, (err, data) => {
         if(err){ res.send({success: false, error: err}); }
@@ -47,7 +47,7 @@ app.get('/item/:id', (req, res) => {
     console.log("Fetching by id [" + req.params.id + "]");
     const params = {
         TableName: TODO_TABLE,
-        Key: {'id': {S: req.params.id}}
+        Key: {'Id': {S: req.params.id}}
     };
     db.get(params,(err, data) => {
         if(err) { res.send({success: false, error: err}); }
