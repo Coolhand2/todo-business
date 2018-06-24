@@ -66,7 +66,7 @@ app.get('/item/:id', (req, res) => {
     console.log("Fetching by id [" + req.params.id + "]");
     let params = {};
     params.TableName = TODO_TABLE;
-    params.Key = {'Id': req.params.id};
+    params.Key = {Id: req.params.id};
     
     console.log("Fetch Parameters: " + JSON.stringify(params));
     db.get(params, (err, data) => {
