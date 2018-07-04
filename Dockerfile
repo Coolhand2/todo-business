@@ -1,8 +1,12 @@
 FROM node:latest
-USER node
-WORKDIR /home/node/app
-ENV NODE_ENV production
-EXPOSE 3000
-COPY ./ /home/node/app/
-VOLUME ["/opt/data"]
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app/
+RUN npm install
+COPY index.js /usr/src/app/
+
 CMD ["node","index.js"]
+
+EXPOSE 3000
