@@ -7,6 +7,7 @@ const uuid = require('uuid/v5');
 const NAMESPACE = uuid('todo-api.shiftedhelix.com', uuid.URL);
 
 const bcrypt = require('bcrypt');
+const SALT_ROUNDS = 10;
 
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-west-2'});
@@ -45,7 +46,7 @@ app.post('/user', (req, res) => {
             Handle: req.body.handle,
             Email: req.body.email,
             Id: buildUUID({handle: req.body.handle, email: req.body.email}),
-            Password: bcrypt(req.body.password)
+            Password: bcrypt.hashSync(req.body.password, SALT_ROUNDS)
         }
     };
     db.put(params, (err, data) => { buildResponse(res, err, data); });
@@ -70,7 +71,7 @@ app.put('/user/:id', (req, res) => {
         else {
             params.UpdateExpression = "set Password = :p, Email = :e";
             params.ExpressionAttributeValues = {
-                ":p": req.body.hasOwnProperty('password') ? bcrypt(req.body.password) : data.Password,
+                ":p": req.body.hasOwnProperty('password') ? bcrypt.hashSync(req.body.password, SALT_ROUNDS) : data.Password,
                 ":e": req.body.hasOwnProperty('email') ? req.body.email : data.Email
             };
             params.ReturnValues = "UPDATED_NEW";
