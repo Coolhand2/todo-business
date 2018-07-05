@@ -17,27 +17,27 @@ const TODO_TABLE = 'todo';
 const USER_TABLE = 'user';
 
 let scan = (params, callback) => {
-    console.log("Performing database scan: " + params);
+    console.log("Performing database scan: " + JSON.stringify(params));
     db.scan(params, callback);
 }
 
 let get = (params, callback) => {
-    console.log("Performing database fetch: " + params);
+    console.log("Performing database fetch: " + JSON.stringify(params));
     db.get(params, callback);
 }
 
 let put = (params, callback) => {
-    console.log("Performing database insert: " + params);
+    console.log("Performing database insert: " + JSON.stringify(params));
     db.put(params, callback);
 }
 
 let update = (params, callback) => {
-    console.log("Performing database update: " + params);
+    console.log("Performing database update: " + JSON.stringify(params));
     db.update(params, callback);
 }
 
 let remove = (params, callback) => {
-    console.log("Performing database delete: " + params);
+    console.log("Performing database delete: " + JSON.stringify(params));
     db.delete(params, callback);
 }
 
