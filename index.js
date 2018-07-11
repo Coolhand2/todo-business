@@ -1,7 +1,16 @@
 const express = require('express')
 const credentials = {}; //For future SSL Configuration.
 const app = express(credentials);
+
+/** Convert incoming request bodies to correct JSON format */
 app.use(express.json());
+
+/** Pass in A-CORs headers to allow the frontend to communicate. */
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 const uuid = require('uuid/v5');
 const NAMESPACE = uuid('todo-api.shiftedhelix.com', uuid.URL);
