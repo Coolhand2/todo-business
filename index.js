@@ -419,12 +419,12 @@ app.put('/item/:id', (req, res) => {
     console.log("Updating item: [" + req.params.id + "]");
     let params = {
         TableName: TODO_TABLE,
-        Key: {'Id': req.params.id}
-    }
+        Key: { "Id": req.params.id }
+    };
     get(params, (err, data) => {
+        console.log("Action Performed! {error: " + err + ", data: " + data +"}");
         if (err) { buildResponse(res, err, data); }
         else {
-            console.log("Request: " + JSON.stringify(req));
             console.log("Body in update: " + JSON.stringify(req.body));
             if(req.body.hasOwnProperty('todo')) {
                 console.log("It has a todo property!");
