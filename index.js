@@ -424,6 +424,7 @@ app.put('/item/:id', (req, res) => {
     get(params, (err, data) => {
         if (err) { buildResponse(res, err, data); }
         else {
+            console.log("Request: " + JSON.stringify(req));
             console.log("Body in update: " + JSON.stringify(req.body));
             if(req.body.hasOwnProperty('todo')) {
                 console.log("It has a todo property!");
