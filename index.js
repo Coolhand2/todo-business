@@ -175,7 +175,7 @@ app.post('/login', (req, res) => {
                 update({
                     TableName: USER_TABLE,
                     Key: user.Id,
-                    UpdateExpression: "set jwt = :j",
+                    UpdateExpression: "set Jwt = :j",
                     ExpressionAttributeValues: { ":j": jwt },
                     ReturnValues: "UPDATED_NEW"
                 }, buildResponse(res, null, { "jwt": jwt }));
@@ -392,7 +392,7 @@ app.post('/item', (req, res) => {
     put({
         TableName: TODO_TABLE,
         Item: {
-            Todo: req.body.todo,
+            Item: req.body.todo,
             User: req.body.user,
             Done: false,
             Created: created,
@@ -422,17 +422,17 @@ app.put('/item/:id', (req, res) => {
         Key: { "Id": req.params.id }
     };
     get(params, (err, data) => {
-        console.log("Action Performed! {error: " + err + ", data: " + data +"}");
+        console.log("Action Performed! {error: " + JSON.stringify(err) + ", data: " + JSON.stringify(data) +"}");
         if (err) { buildResponse(res, err, data); }
         else {
             console.log("Body in update: " + JSON.stringify(req.body));
             if(req.body.hasOwnProperty('todo')) {
                 console.log("It has a todo property!");
-                params.UpdateExpression = "set todo = :t";
+                params.UpdateExpression = "set Item = :t";
                 params.ExpressionAttributeValues = {":t": req.body.todo};
             } else if(req.body.hasOwnProperty('done')) {
                 console.log("It has a done property!");
-                params.UpdateExpression = "set done = :d";
+                params.UpdateExpression = "set Done = :d";
                 params.ExpressionAttributeValues = {":d": req.body.done};
             }
             params.ReturnValues = "UPDATED_NEW";
