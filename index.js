@@ -23,6 +23,16 @@ const TODO_TABLE = 'todo';
 const USER_TABLE = 'user';
 
 /**
+ * Performs a query on dynamodb given the parameters.
+ * @param {JSON} params specified to perform a correct query on DynamoDB.
+ * @param {CALLBACK} callback Function to handle the return result of the scan.
+ */
+let query = (params, callback) => {
+    console.log("Performing database query: " + JSON.stringify(params));
+    db.query(params, callback);
+}
+
+/**
  * Performs a scan on dynamodb given the parameters
  * @param {JSON} params specified to perform a correct scan on DynamoDB.
  * @param {CALLBACK} callback Function to handle the return result of the scan.
@@ -355,6 +365,30 @@ app.get('/item/all', (req, res) => {
 });
 
 /**
+ * Gets all unfinished items in the database.
+ * Does not expect JSON body with request.
+ * 
+ * Returns on success:
+ * {success: true, data: {list of all unfinished item data}}
+ */
+app.get('/item/unfinished', (req, res) => {
+    console.log("Fetching All Unfinished Items");
+    scan({
+        TableName: TODO_TABLE,
+        ProjectionExpression: "Id, Created, Done, #i, #u",
+        ExpressionAttributeNames: {
+            "#i": "Item",
+            "#u": "User"
+        },
+        FilterExpression: "Done = :d",
+        ExpressionAttributeValues: {
+            ":d": {"B": false}
+        }
+    },(err, data) => { buildResponse(res, err, data); });
+
+});
+
+/**
  * Gets item details via given id.
  * Does not expect JSON body with request.
  * 
@@ -387,8 +421,9 @@ app.get('/item/:id', (req, res) => {
  */
 app.post('/item', (req, res) => {
     console.log("Creating item: [" + req.body.todo + ", " + req.body.user + "]");
-    let created = new Date();
+    let created = Math.floor(Date.now());
     let id = buildUUID({ todo: req.body.todo, user: req.body.user, time: created });
+    console.log("New Item Id: " + id);
     put({
         TableName: TODO_TABLE,
         Item: {
