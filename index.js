@@ -382,7 +382,7 @@ app.get('/item/unfinished', (req, res) => {
         },
         FilterExpression: "Done = :d",
         ExpressionAttributeValues: {
-            ":d": {"B": false}
+            ":d": false
         }
     },(err, data) => { buildResponse(res, err, data); });
 
