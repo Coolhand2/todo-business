@@ -231,8 +231,8 @@ app.post('/logout', (req, res) => {
  * Uses bcrypt to salt and hash the password for storage.
  */
 app.post('/register', (req, res) => {
-    console.log("Registering new user: ["+ req.body.handle +"]");
-    let id = buildUUID({handle: req.body.handle, email: req.body.email});
+    console.log("Registering new user: [" + req.body.handle + "]");
+    let id = buildUUID({ handle: req.body.handle, email: req.body.email });
     let jwt = buildJWT(id);
     let hash = bcrypt.hashSync(req.body.password, SALT_ROUNDS);
     put({
@@ -264,7 +264,7 @@ app.post('/register', (req, res) => {
  * {success: true, data:{}}
  */
 app.put('/user/:id', (req, res) => {
-    console.log("Updating user: ["+ req.params.id +"]");
+    console.log("Updating user: [" + req.params.id + "]");
     let params = {};
     params.TableName = USER_TABLE;
     params.Key = { 'Id': req.params.id };
@@ -296,7 +296,7 @@ app.put('/user/:id', (req, res) => {
  * {success: true, data: {}}
  */
 app.delete('/user', (req, res) => {
-    console.log("Deleting user: ["+ req.body.id +"]");
+    console.log("Deleting user: [" + req.body.id + "]");
     remove({
         TableName: USER_TABLE,
         Key: {
@@ -388,7 +388,7 @@ app.get('/item/:id', (req, res) => {
 app.post('/item', (req, res) => {
     console.log("Creating item: [" + req.body.todo + ", " + req.body.user + "]");
     let created = new Date();
-    let id = buildUUID({todo: req.body.todo, user: req.body.user, time: created});
+    let id = buildUUID({ todo: req.body.todo, user: req.body.user, time: created });
     put({
         TableName: TODO_TABLE,
         Item: {
@@ -398,7 +398,15 @@ app.post('/item', (req, res) => {
             Created: created,
             Id: id
         }
-    }, (err, data) => { buildResponse(res, err, data); });
+    }, (err, data) => {
+        if (err) { buildResponse(res, err, data); }
+        else {
+            get({
+                TableName: TODO_TABLE,
+                Key: { "Id": id }
+            }, (err, data) => { buildResponse(res, err, data); });
+        }
+    });
 });
 
 /**
@@ -422,20 +430,20 @@ app.put('/item/:id', (req, res) => {
         Key: { "Id": req.params.id }
     };
     get(params, (err, data) => {
-        console.log("Action Performed! {error: " + JSON.stringify(err) + ", data: " + JSON.stringify(data) +"}");
+        console.log("Action Performed! {error: " + JSON.stringify(err) + ", data: " + JSON.stringify(data) + "}");
         if (err) { buildResponse(res, err, data); }
         else {
             console.log("Body in update: " + JSON.stringify(req.body));
-            if(req.body.hasOwnProperty('todo')) {
+            if (req.body.hasOwnProperty('todo')) {
                 console.log("It has a todo property!");
                 params.UpdateExpression = "set #i = :t";
-                params.ExpressionAttributeNames = {"#i": 'Item'};
-                params.ExpressionAttributeValues = {":t": req.body.todo};
-            } else if(req.body.hasOwnProperty('done')) {
+                params.ExpressionAttributeNames = { "#i": 'Item' };
+                params.ExpressionAttributeValues = { ":t": req.body.todo };
+            } else if (req.body.hasOwnProperty('done')) {
                 console.log("It has a done property!");
                 params.UpdateExpression = "set #d = :d";
-                params.ExpressionAttributeNames = {"#d": 'Done'};
-                params.ExpressionAttributeValues = {":d": req.body.done};
+                params.ExpressionAttributeNames = { "#d": 'Done' };
+                params.ExpressionAttributeValues = { ":d": req.body.done };
             }
             params.ReturnValues = "UPDATED_NEW";
             update(params, (err, data) => { buildResponse(res, err, data); });
