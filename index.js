@@ -428,11 +428,13 @@ app.put('/item/:id', (req, res) => {
             console.log("Body in update: " + JSON.stringify(req.body));
             if(req.body.hasOwnProperty('todo')) {
                 console.log("It has a todo property!");
-                params.UpdateExpression = "set Item = :t";
+                params.UpdateExpression = "set #i = :t";
+                params.ExpressionAttributeNames = {"#i": 'Item'};
                 params.ExpressionAttributeValues = {":t": req.body.todo};
             } else if(req.body.hasOwnProperty('done')) {
                 console.log("It has a done property!");
-                params.UpdateExpression = "set Done = :d";
+                params.UpdateExpression = "set #d = :d";
+                params.ExpressionAttributeNames = {"#d": 'Done'};
                 params.ExpressionAttributeValues = {":d": req.body.done};
             }
             params.ReturnValues = "UPDATED_NEW";
