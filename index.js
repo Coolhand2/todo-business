@@ -77,7 +77,7 @@ let remove = (params, callback) => {
  * @param {JSON} params Parameters to create a Universally Unique ID
  */
 let buildUUID = (params) => {
-    return uuid(params, NAMESPACE);
+    return uuid(JSON.stringify(params), NAMESPACE);
 }
 
 /**
